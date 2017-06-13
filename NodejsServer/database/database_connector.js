@@ -1,14 +1,13 @@
 var mysql = require('mysql');
 var config = require('../config/config');
-var configLocalhost = require('../config/configLocalhost');
 
 var pool = mysql.createPool({
     multipleStatements:true,
     connectionLimit : 25,
-    host : configLocalhost.dbHost,
-    user : configLocalhost.dbUsername,
-    password : configLocalhost.dbPassword,
-    database : configLocalhost.dbDatabase
+    host : config.dbHost,
+    user : config.dbUser,
+    password : config.dbPassword,
+    database : config.dbDatabase
 });
 
 module.exports = pool;

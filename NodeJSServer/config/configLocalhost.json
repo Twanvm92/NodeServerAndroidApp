@@ -1,8 +1,0 @@
-{
-  "webPort": "8000",
-  "dbHost": "localhost",
-  "dbUser": "root",
-  "dbDatabase": "sakilasmall",
-  "dbPassword": "",
-  "secretkey": "een lange complexe tekst die moeilijk te raden is"
-}

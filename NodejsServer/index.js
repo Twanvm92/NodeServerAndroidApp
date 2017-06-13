@@ -1,7 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var config = require('./config/config');
-var configLocalhost = require('./config/configLocalhost');
 
 var app = express();
 app.use(bodyParser.urlencoded({ 'extended':'true'}))
@@ -17,7 +16,7 @@ app.all('*', function(request, response, next){
 app.use('', require('./routes/api_v1'));
 
 
-app.set('PORT', configLocalhost.webPort);
+app.set('PORT', config.webPort);
 
 app.get('/info', function(request, response) {
     response.send('Zelf gemaakte films huren via android applicatie');

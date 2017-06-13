@@ -28,7 +28,7 @@ router.post('/login', function(req, res) {
 
     if (username != '' && password != '') {
         var query_str = {
-            sql: query_str = 'SELECT password FROM user WHERE username=?',
+            sql: query_str = 'SELECT password FROM customer WHERE username=?',
             values: [username],
             timeout: 2000
         }
@@ -68,7 +68,7 @@ router.post('/register', function(req, res) {
     if (username != '' && password != '') {
         var hash = bcrypt.hashSync(password, 10);
         var query_str = {
-            sql: 'INSERT INTO `user` (username, password) VALUES (?, ?)',
+            sql: 'INSERT INTO `customer` (username, password) VALUES (?, ?)',
             values: [username, hash],
             timeout: 2000 // 2secs
         };
