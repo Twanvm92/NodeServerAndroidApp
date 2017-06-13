@@ -12,6 +12,8 @@
     "bcrypt": "^1.0.2",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "jwt-simple": "^0.5.1",
+    "moment": "^2.18.1",
     "mysql": "^2.13.0"
   },
   "devDependencies": {
