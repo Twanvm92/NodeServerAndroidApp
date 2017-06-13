@@ -1,4 +1,4 @@
-package twanvm.movieapp;
+package twanvm.movieapp.Presentation;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -31,6 +31,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import twanvm.movieapp.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
