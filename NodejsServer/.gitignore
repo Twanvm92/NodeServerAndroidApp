@@ -59,4 +59,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# WebStorm IDE
+.idea
+
+
 
