@@ -13,7 +13,7 @@ app.all('*', function(request, response, next){
     next();
 })
 
-app.use('', require('./routes/api_v1'));
+app.use('/api/v1', require('./routes/api_v1'));
 
 
 app.set('PORT', config.webPort);
