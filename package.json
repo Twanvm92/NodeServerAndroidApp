@@ -2,9 +2,9 @@
   "name": "movieappserver",
   "version": "1.0.1",
   "description": "Node.js server for Android app",
-  "main": "./NodeJSServer/index.js",
+  "main": "./NodejsServer/index.js",
   "scripts": {
-    "start":"node ./NodeJSServer/index.js"
+    "start":"node ./NodejsServer/index.js"
   },
   "author": "Twan van Maastricht & Maikel Jacobs",
   "license": "ISC",
