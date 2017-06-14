@@ -7,20 +7,20 @@ var bcrypt = require('bcrypt');
 var dateTimeHandler = require('../dateTimeHandler');
 
 // A token needs to be provided by the user except for certain requests
-// router.all( new RegExp("^(\/films\/[0-9]+)$|\/about$|\/info$|\/register$|\/login$"), function (request, response, next) {
-// console.log("Validating token...")
-//     var token = (request.header('Token')) || '';
-//
-//     auth.decodeToken(token, function (error, payload) {
-//         if (error) {
-//             console.log('Error: ' + error.message);
-//             response.status(401).json({error: "Not authorised"});
-//         } else {
-//             console.log("User has been granted access");
-//             next();
-//         }
-//     });
-// });
+router.all( new RegExp(/^(?!.*\/films|\/about$|\/info$|\/login$|\/register$).*$/m), function (request, response, next) {
+    console.log("Validating token...")
+    var token = (request.header('Token')) || '';
+
+    auth.decodeToken(token, function (error, payload) {
+        if (error) {
+            console.log('Error: ' + error.message);
+            response.status(401).json({error: "Not authorised"});
+        } else {
+            console.log("User has been granted access");
+            next();
+        }
+    });
+});
 
 // Logging in with an existing user account
 router.post('/login', function(request, response) {
