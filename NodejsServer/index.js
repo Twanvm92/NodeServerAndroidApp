@@ -1,7 +1,7 @@
 var http = require('http');
 var express = require('express');
 var bodyParser = require('body-parser');
-var config = require('./config/config');
+var config = require('./config');
 
 var app = express();
 app.use(bodyParser.urlencoded({ 'extended':'true'}))
