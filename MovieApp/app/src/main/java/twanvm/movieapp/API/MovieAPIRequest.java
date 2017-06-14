@@ -64,8 +64,7 @@ public class MovieAPIRequest {
                         public void onResponse(JSONObject response) {
                             // Succesvol response - dat betekent dat we een geldig token hebben.
                             // txtLoginErrorMsg.setText("Response: " + response.toString());
-                            Utilities.displayMessage(context,"Succesvol ingelogd!");
-                            Utilities.displayMessage(context ,"Succesvol ingelogd!");
+                            Utilities.displayMessage(context, context.getString(R.string.login_succes));
 
                             // We hebben nu het token. We kiezen er hier voor om
                             // het token in SharedPreferences op te slaan. Op die manier
@@ -79,7 +78,12 @@ public class MovieAPIRequest {
                                 editor.putString(context.getString(R.string.saved_token), token);
                                 editor.commit();
 
-                                logListener.isLoggedIn(true);
+                                if(logListener != null) {
+                                    logListener.isLoggedIn(true);
+                                } else if (regListener != null) {
+                                    regListener.isLoggedIn(true);
+                                }
+
 
 
                             } catch (JSONException e) {
@@ -91,8 +95,14 @@ public class MovieAPIRequest {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            logListener.handleResponseError(error);
-                            logListener.isLoggedIn(false);
+                            if(logListener != null) {
+                                logListener.handleResponseError(error);
+                                logListener.isLoggedIn(false);
+                            } else if (regListener != null) {
+                                regListener.handleResponseError(error);
+                                regListener.isLoggedIn(false);
+                            }
+
                         }
                     });
 

@@ -81,7 +81,7 @@ router.post('/register', function(req, res) {
                 connection.release();
                 if (error) {
                     if (error.code === 'ER_DUP_ENTRY') {
-                        res.status(401).json({"Error": "Deze gebruiker bestaat al"});
+                        res.status(401).json({"error": "Deze gebruiker bestaat al"});
                         return;
                     } else {
                         throw error

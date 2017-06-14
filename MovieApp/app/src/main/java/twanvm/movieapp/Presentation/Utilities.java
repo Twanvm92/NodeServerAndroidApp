@@ -14,7 +14,7 @@ import org.json.JSONObject;
 public class Utilities {
 
     public static void displayMessage(Context context, String toastString){
-        Toast.makeText(context, toastString, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, toastString, Toast.LENGTH_SHORT).show();
     }
 
     public static String trimMessage(String json, String key){

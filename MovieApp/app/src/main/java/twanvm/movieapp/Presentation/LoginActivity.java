@@ -110,14 +110,14 @@ public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
+        // Check if password is empty.
         if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_empty_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // Check if username is empty
         if (TextUtils.isEmpty(username)) {
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;

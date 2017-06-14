@@ -39,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity implements MovieAPIReque
     // UI references.
     private AutoCompleteTextView mUsernameView;
     private EditText mPasswordView;
+    private TextView mLoginView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -71,6 +72,19 @@ public class RegisterActivity extends AppCompatActivity implements MovieAPIReque
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        mLoginView = (TextView) findViewById(R.id.link_to_login);
+
+        mLoginView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the main activity, and close the login activity
+                Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(login);
+                // Close the current activity
+                finish();
+            }
+        });
     }
 
     /**
@@ -94,60 +108,12 @@ public class RegisterActivity extends AppCompatActivity implements MovieAPIReque
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        // Check if password is empty.
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_empty_password));
             focusView = mPasswordView;
             cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(username)) {
-            mUsernameView.setError(getString(R.string.error_field_required));
-            focusView = mUsernameView;
-            cancel = true;
-        } else if (!isUsernameValid(username)) {
-            mUsernameView.setError(getString(R.string.error_invalid_username));
-            focusView = mUsernameView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            movieAPIRequest = new MovieAPIRequest(this, this);
-            movieAPIRequest.HandleRegistration(username, password);
-        }
-    }
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {
-        if (movieAPIRequest != null) {
-            return;
-        }
-
-        // Reset errors.
-        mUsernameView.setError(null);
-        mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String username = mUsernameView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        } else if(!isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -259,7 +225,6 @@ public class RegisterActivity extends AppCompatActivity implements MovieAPIReque
                 json = Utilities.trimMessage(json, "error");
                 if (json != null) {
                     json = "Error " + response.statusCode + ": " + json;
-                    Utilities.displayMessage(this, json);
                     mUsernameView.setError(json);
                 }
             } else {
