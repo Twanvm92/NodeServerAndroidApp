@@ -2,6 +2,7 @@ package twanvm.movieapp.API;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Movie;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -29,6 +30,7 @@ public class MovieAPIRequest {
     // De aanroepende class implementeert deze interface.
     private MovieAPIRequest.MovieAPIListener listener;
     private MovieAPIRequest.LoginListener logListener;
+    private MovieAPIRequest.RegisterListener regListener;
 
     public MovieAPIRequest(Context context, MovieAPIListener listener) {
         this.context = context;
@@ -38,6 +40,11 @@ public class MovieAPIRequest {
     public MovieAPIRequest(Context context, LoginListener logListener) {
         this.context = context;
         this.logListener = logListener;
+    }
+
+    public MovieAPIRequest(Context context, RegisterListener regListener) {
+        this.context = context;
+        this.regListener = regListener;
     }
 
     public void HandleLogin(String username, String password) {
@@ -85,6 +92,7 @@ public class MovieAPIRequest {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             logListener.handleResponseError(error);
+                            logListener.isLoggedIn(false);
                         }
                     });
 
@@ -101,12 +109,63 @@ public class MovieAPIRequest {
         return;
     }
 
+    public void HandleRegistration(final String username, final String password) {
+        //
+        // Maak een JSON object met username en password. Dit object sturen we mee
+        // als request body (zoals je ook met Postman hebt gedaan)
+        //
+        String body = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
+        Log.i(TAG, "handleLogin - body = " + body);
+
+        try {
+            JSONObject jsonBody = new JSONObject(body);
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                    (Request.Method.POST, Constants.URL_REGISTER, jsonBody, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            Utilities.displayMessage(context,"Registration succeeded!");
+
+                            regListener.isRegistered(true, username, password);
+
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            regListener.handleResponseError(error);
+                            regListener.isLoggedIn(false);
+                        }
+                    });
+
+            jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    1500, // SOCKET_TIMEOUT_MS,
+                    2, // DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            // Access the RequestQueue through your singleton class.
+            VolleyRequestQueue.getInstance(context).addToRequestQueue(jsObjRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return;
+    }
+
     public interface MovieAPIListener {
 
         void handleResponseError(VolleyError error);
     }
 
     public interface LoginListener {
+
+        void isLoggedIn(boolean loggedIn);
+
+        void handleResponseError(VolleyError error);
+    }
+
+    public interface RegisterListener {
+        void isRegistered(boolean registered, String username, String password);
 
         void isLoggedIn(boolean loggedIn);
 

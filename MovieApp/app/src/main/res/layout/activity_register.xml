@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="twanvm.movieapp.LoginActivity2">
+    tools:context="twanvm.movieapp.Presentation.RegisterActivity">
 
     <!-- Login progress -->
     <ProgressBar
@@ -38,8 +38,7 @@
                     android:id="@+id/register_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
+                    android:hint="@string/prompt_username"
                     android:maxLines="1"
                     android:singleLine="true" />
 
