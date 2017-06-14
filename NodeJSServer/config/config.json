@@ -1,5 +1,5 @@
 {
-  "webPort": "3306",
+  "webPort": "8000",
   "dbHost": "146.185.130.82",
   "dbUser": "1063",
   "dbPassword": "a0c5!9V4k7ox",

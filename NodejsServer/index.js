@@ -1,3 +1,4 @@
+var http = require('http');
 var express = require('express');
 var bodyParser = require('body-parser');
 var config = require('./config/config');
@@ -30,7 +31,7 @@ app.all('*', function(request, response) {
     response.send('404 - Not found');
 })
 
-var port = process.env.PORT || app.get('PORT');
+var port = process.env.PORT || /*app.get('PORT')*/ 8000;
 
 app.listen(port, function() {
     console.log('Server app is listening on port ' + port);
