@@ -6,8 +6,6 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
-import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,10 +28,10 @@ import twanvm.movieapp.R;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.LoginListener {
+public class RegisterActivity extends AppCompatActivity implements MovieAPIRequest.RegisterListener {
 
     /**
-     * Keep track of the login task to ensure we can cancel it if requested.
+     * Keep track of the register task to ensure we can cancel it if requested.
      */
     private MovieAPIRequest movieAPIRequest = null;
     public final String TAG = this.getClass().getSimpleName();
@@ -41,48 +39,48 @@ public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.
     // UI references.
     private AutoCompleteTextView mUsernameView;
     private EditText mPasswordView;
-    private TextView mRegisterView;
+    private TextView mLoginView;
     private View mProgressView;
     private View mLoginFormView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
         // Set up the login form.
-        mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
+        mUsernameView = (AutoCompleteTextView) findViewById(R.id.register_username);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    attemptRegistration();
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mUsernameSignInButton = (Button) findViewById(R.id.username_sign_in_button);
-        mUsernameSignInButton.setOnClickListener(new OnClickListener() {
+        Button mRegisterButton = (Button) findViewById(R.id.register_button);
+        mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                attemptRegistration();
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        mRegisterView = (TextView) findViewById(R.id.link_to_register);
+        mLoginView = (TextView) findViewById(R.id.link_to_login);
 
-        mRegisterView.setOnClickListener(new OnClickListener() {
+        mLoginView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start the main activity, and close the login activity
-                Intent register = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(register);
+                Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(login);
                 // Close the current activity
                 finish();
             }
@@ -94,7 +92,7 @@ public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptRegistration() {
         if (movieAPIRequest != null) {
             return;
         }
@@ -115,11 +113,19 @@ public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.
             mPasswordView.setError(getString(R.string.error_empty_password));
             focusView = mPasswordView;
             cancel = true;
+        } else if(!isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
         }
 
-        // Check if username is empty
+        // Check for a valid email address.
         if (TextUtils.isEmpty(username)) {
             mUsernameView.setError(getString(R.string.error_field_required));
+            focusView = mUsernameView;
+            cancel = true;
+        } else if (!isUsernameValid(username)) {
+            mUsernameView.setError(getString(R.string.error_invalid_username));
             focusView = mUsernameView;
             cancel = true;
         }
@@ -133,8 +139,18 @@ public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.
             // perform the user login attempt.
             showProgress(true);
             movieAPIRequest = new MovieAPIRequest(this, this);
-            movieAPIRequest.HandleLogin(username, password);
+            movieAPIRequest.HandleRegistration(username, password);
         }
+    }
+
+    private boolean isUsernameValid(String username) {
+//        return username.length() >= 5 && username.length() <= 15;
+        return true;
+    }
+
+    private boolean isPasswordValid(String password) {
+//        return password.length() > 6;
+        return true;
     }
 
     /**
@@ -174,8 +190,17 @@ public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.
     }
 
     @Override
-    public void isLoggedIn(boolean loggedIn) {
+    public void isRegistered(boolean registered, String username, String password) {
+        if (registered) {
+            movieAPIRequest.HandleLogin(username, password);
+        } else {
+            showProgress(false);
+            movieAPIRequest = null;
+        }
+    }
 
+    @Override
+    public void isLoggedIn(boolean loggedIn) {
         if(loggedIn) {
             // Start the main activity, and close the login activity
             Intent main = new Intent(getApplicationContext(), MainActivity.class);
@@ -186,7 +211,6 @@ public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.
             showProgress(false);
             movieAPIRequest = null;
         }
-
     }
 
     @Override
@@ -201,13 +225,13 @@ public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.
                 json = Utilities.trimMessage(json, "error");
                 if (json != null) {
                     json = "Error " + response.statusCode + ": " + json;
-                    Utilities.displayMessage(this, json);
+                    mUsernameView.setError(json);
                 }
             } else {
                 Log.e(TAG, "handleErrorResponse: kon geen networkResponse vinden.");
             }
 
-            mUsernameView.setError(getString(R.string.error_unmatched_credentials));
+
         } else if(error instanceof com.android.volley.NoConnectionError) {
             Log.e(TAG, "handleErrorResponse: server was niet bereikbaar");
             Utilities.displayMessage(this, getString(R.string.error_server_offline));
@@ -217,8 +241,6 @@ public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.
         } else {
             Log.e(TAG, "handleErrorResponse: error = " + error);
         }
-
     }
-
 }
 

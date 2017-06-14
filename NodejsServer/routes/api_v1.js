@@ -88,8 +88,10 @@ router.post('/register', function(request, response) {
                 connection.release();
                 if (error) {
                     if (error.code === 'ER_DUP_ENTRY') {
+
                         console.log("Username already exists in database");
                         response.status(401).json({error: "This username already exists"});
+
                         return;
                     } else {
                         response.status(400);
