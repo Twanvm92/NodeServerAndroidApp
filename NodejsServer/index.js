@@ -13,13 +13,13 @@ app.all('*', function(request, response, next){
     next();
 })
 
-app.use('', require('./routes/api_v1'));
+app.use(require('./routes/api_v1'));
 
 
 app.set('PORT', config.webPort);
 
 app.get('/info', function(request, response) {
-    response.send('Zelf gemaakte films huren via android applicatie');
+    response.send('Rent a film with this app :D');
 })
 
 app.get('/about', function(request, response) {
