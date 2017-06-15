@@ -9,7 +9,7 @@ addons:
 jdk:
   - oraclejdk8
 script:
-  - ./MovieApp/gradlew sonarqube
+  - ./gradlew sonarqube
 cache:
   directories:
     - '$HOME/.m2/repository'
