@@ -30,28 +30,28 @@ router.post('/login', function(request, response) {
 
     if (username != '' && password != '') {
         var query_str = {
-            sql: query_str = 'SELECT password FROM customer WHERE username=?',
+            sql: query_str = 'SELECT customer_id, password FROM customer WHERE username=?',
             values: [username],
             timeout: 5000
         }
 
         pool.getConnection(function (error, connection) {
             if (error) {
-                response.status(500);
-                throw error
+                return response.status(500).json(error);
+
             }
             connection.query(query_str, function (error, result, fields) {
                 connection.release();
                 if (error) {
-                    response.status(400);
-                    throw error
+                    return response.status(400).json(error);
                 }
 
                 if (result.length > 0) {
                     bcrypt.compare(password, result[0].password, function (error, res) {
                         if (res === true) {
                             console.log("User entered correct password");
-                            response.status(200).json({token: auth.encodeToken(username), username: username});
+                            response.status(200).json({token: auth.encodeToken(username), username: username,
+                                customer_id: result[0].customer_id});
                         } else {
                             console.log("User entered incorrect password");
                             response.status(401).json({error: "Invalid credentials"});
@@ -81,8 +81,7 @@ router.post('/register', function(request, response) {
 
         pool.getConnection(function (error, connection) {
             if (error) {
-                response.status(500);
-                throw error
+                return response.status(500).json(error);
             }
             connection.query(query_str, function (error, rows, fields) {
                 connection.release();
@@ -90,12 +89,9 @@ router.post('/register', function(request, response) {
                     if (error.code === 'ER_DUP_ENTRY') {
 
                         console.log("Username already exists in database");
-                        response.status(401).json({error: "This username already exists"});
-
-                        return;
+                        return response.status(401).json({error: "This username already exists"});
                     } else {
-                        response.status(400);
-                        throw error
+                        return response.status(400).json(error);
                     }
                 }
                 console.log("New user account has been made");
@@ -114,7 +110,7 @@ router.get('/films', function(request, response, next) {
     var offset = request.query.offset;
 
     if (!(parseInt(count) > 0) || !(parseInt(offset) >= 0)){
-        return next();
+        return response.status(400).json({'error' : 'Illegal parameters'});
     }
 
         var query_str = {
@@ -128,14 +124,12 @@ router.get('/films', function(request, response, next) {
 
         pool.getConnection(function (error, connection) {
             if (error) {
-                response.status(500);
-                throw error
+                return response.status(500).json(error);
             }
             connection.query(query_str, function (error, rows, fields) {
                 connection.release();
                 if (error) {
-                    response.status(400);
-                    throw error
+                    return response.status(400).json(error);
                 }
                 response.status(200).json(rows);
             });
@@ -148,26 +142,26 @@ router.get('/films/:filmid', function(request, response, next) {
 
     if (filmID > 0) {
         var query_str = {
-            sql: query_str = 'SELECT * FROM film WHERE film_id = "' + filmID + '";',
+            sql: query_str = 'SELECT * FROM view_rental WHERE film_id = "' + filmID + '";',
             values: [],
             timeout: 5000
         }
         pool.getConnection(function (error, connection) {
             if (error) {
-                response.status(500);
-                throw error
+                return response.status(500).json(error);
             }
             connection.query(query_str, function (error, rows, fields) {
                 connection.release();
                 if (error) {
-                    response.status(400);
-                    throw error
+                    response.status(400).json(error);
+                } else {
+                    response.status(200).json(rows);
                 }
-                response.status(200).json(rows);
+
             });
         });
     } else {
-        response.status(400);
+        response.status(400).json({'error' : 'Illegal parameters'});
     }
 });
 
@@ -175,22 +169,19 @@ router.get('/films/:filmid', function(request, response, next) {
 router.get('/rentals/:userid', function(request, response) {
     var userID = request.params.userid;
     var query_str = {
-        sql: query_str = 'SELECT * FROM rental WHERE customer_id = "' + userID + '";',
+        sql: query_str = 'SELECT * FROM view_rental WHERE customer_id = "' + userID + '";',
         values: [],
         timeout: 5000
     }
 
     pool.getConnection(function (error, connection) {
         if (error) {
-            response.status(500);
-            throw error
+            return response.status(500).json(error);
         }
         connection.query(query_str, function (error, rows, fields) {
             connection.release();
             if (error) {
-                response.status(400);
-                throw error
-
+                return response.status(400).json(error);
             }
             response.status(200).json(rows);
         });
@@ -210,15 +201,16 @@ router.post('/rentals/:userid/:inventoryid', function(request, response) {
 
     pool.getConnection(function (error, connection) {
         if (error) {
-            response.status(500);
-            throw error
+            return response.status(500).json(error);
         }
         connection.query(query_str, function (error, rows, fields) {
             connection.release();
             if (error) {
-                response.status(400);
-                throw error
+                console.log(error.toString());
+                return response.status(400).json(error);
+
             }
+            console.log("Rental added to database")
             response.status(200).json({message: "Rental added to database"});
         });
     });
@@ -240,16 +232,21 @@ router.put('/rentals/:userid/:inventoryid', function(request, response) {
 
     pool.getConnection(function (error, connection) {
         if (error) {
-            response.status(500);
-            throw error
+            return response.status(500).json(error);
         }
         connection.query(query_str, function (error, rows, fields) {
             connection.release();
             if (error) {
-                response.status(400);
-                throw error
+                console.log(error.toString());
+                return response.status(400).json(error);
             }
-            response.status(200).json({message: "Rental succesfully returned at " + dateTime});
+            if(rows.affectedRows > 0) {
+                console.log("Rental succesfully returned at " + dateTime);
+                response.status(200).json({message: "Rental succesfully returned at " + dateTime});
+            } else {
+                console.log("Rental was not found")
+                response.status(400).json({error: "Rental was not found"});
+            }
         });
     });
 });
@@ -267,16 +264,21 @@ router.delete('/rentals/:userid/:inventoryid', function(request, response) {
 
     pool.getConnection(function (error, connection) {
         if (error) {
-            response.status(500);
-            throw error
+            return response.status(500).json(error);
         }
         connection.query(query_str, function (error, rows, fields) {
             connection.release();
             if (error) {
-                response.status(400);
-                throw error
+                return response.status(400).json(error);
             }
-            response.status(200).json({message: "Rental removed from database"});
+
+            if(rows.affectedRows > 0) {
+                console.log("Rental succesfully deleted");
+                response.status(200).json({message: "Rental succesfully deleted"});
+            } else {
+                console.log("Rental was not found")
+                response.status(400).json({error: "Rental was not found"});
+            }
         });
     });
 });

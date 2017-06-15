@@ -1,4 +1,4 @@
-var settings = require('../config/config');
+var settings = require('../config');
 const moment = require('moment');
 const jwt = require('jwt-simple');
 
