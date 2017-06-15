@@ -81,7 +81,7 @@ public class FilmListFragment extends Fragment implements FilmAPIRequest.FilmAPI
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 count = Integer.parseInt(parent.getSelectedItem().toString());
-                if (offsetEditText.getText().toString().equals("")) {
+                if (!offsetEditText.getText().toString().equals("")) {
                     try {
                         offset = Integer.parseInt(offsetEditText.getText().toString());
                     } catch (NumberFormatException e){

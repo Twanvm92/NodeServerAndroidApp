@@ -55,10 +55,6 @@ public class FilmAPIRequest {
     }
 
     public void HandleLogin(String username, String password) {
-        //
-        // Maak een JSON object met username en password. Dit object sturen we mee
-        // als request body (zoals je ook met Postman hebt gedaan)
-        //
         String body = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
         Log.i(TAG, "handleLogin - body = " + body);
 
@@ -69,14 +65,8 @@ public class FilmAPIRequest {
 
                         @Override
                         public void onResponse(JSONObject response) {
-                            // Succesvol response - dat betekent dat we een geldig token hebben.
-                            // txtLoginErrorMsg.setText("Response: " + response.toString());
-                            Utilities.displayMessage(context, context.getString(R.string.login_succes));
 
-                            // We hebben nu het token. We kiezen er hier voor om
-                            // het token in SharedPreferences op te slaan. Op die manier
-                            // is het token tussen app-stop en -herstart beschikbaar -
-                            // totdat het token expired.
+                            Utilities.displayMessage(context, context.getString(R.string.login_succes));
                             try {
                                 String token = response.getString("token");
                                 int customer_id = response.getInt("customer_id");
@@ -84,7 +74,7 @@ public class FilmAPIRequest {
                                         context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putString(context.getString(R.string.saved_token), token);
-                                editor.putInt("saved_user", customer_id);
+                                editor.putInt("saved_userID", customer_id);
                                 editor.commit();
 
                                 if(logListener != null) {
@@ -92,11 +82,7 @@ public class FilmAPIRequest {
                                 } else if (regListener != null) {
                                     regListener.isLoggedIn(true);
                                 }
-
-
-
                             } catch (JSONException e) {
-                                // e.printStackTrace();
                                 Log.e(TAG, e.getMessage());
                             }
                         }
@@ -129,10 +115,6 @@ public class FilmAPIRequest {
     }
 
     public void HandleRegistration(final String username, final String password) {
-        //
-        // Maak een JSON object met username en password. Dit object sturen we mee
-        // als request body (zoals je ook met Postman hebt gedaan)
-        //
         String body = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
         Log.i(TAG, "handleLogin - body = " + body);
 
@@ -171,9 +153,6 @@ public class FilmAPIRequest {
         return;
     }
 
-    /**
-     * Verstuur een GET request om films op te halen.
-     */
     public void handleGetFilms(int count, int offset) {
 
         Log.i(TAG, "handleGetFilms");
@@ -206,10 +185,6 @@ public class FilmAPIRequest {
         VolleyRequestQueue.getInstance(context).addToRequestQueue(jsArrayRequest);
     }
 
-
-    /**
-     * Verstuur een GET request om films op te halen.
-     */
     public void handleGetRentedFilms(int customerID) {
 
         Log.i(TAG, "handleGetFilms");

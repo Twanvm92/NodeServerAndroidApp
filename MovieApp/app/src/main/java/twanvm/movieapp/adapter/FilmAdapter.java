@@ -12,10 +12,6 @@ import java.util.ArrayList;
 import twanvm.movieapp.R;
 import twanvm.movieapp.domain.Film;
 
-/**
- * Created by Maikel on 14-6-2017.
- */
-
 public class FilmAdapter extends ArrayAdapter<Film> {
     public FilmAdapter(Context context, ArrayList<Film> meldingen){
         super(context, 0, meldingen);
@@ -34,7 +30,5 @@ public class FilmAdapter extends ArrayAdapter<Film> {
         name.setText(film.getTitle());
 
         return convertview;
-
-
     }
 }

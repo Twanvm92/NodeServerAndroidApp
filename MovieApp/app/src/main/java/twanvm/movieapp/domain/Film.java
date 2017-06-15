@@ -2,9 +2,6 @@ package twanvm.movieapp.domain;
 
 import java.io.Serializable;
 
-// film_id - language id(altijd 1), rental duration, special features zijn beschikbaar in database
-// misschien toevoegen ^
-
 public class Film implements Serializable {
     private int id;
     private String title;

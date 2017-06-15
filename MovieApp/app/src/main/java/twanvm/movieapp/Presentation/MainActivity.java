@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import twanvm.movieapp.Constants;
 import twanvm.movieapp.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,12 +48,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.activityMain_item_login) {
-            Log.e("test", "login gedrukt");
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivityForResult(intent, 1 );
             return true;
         } else if (id == R.id.activityMain_item_register) {
-            Log.e("test", "register gedrukt");
             Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
             startActivityForResult(intent, 1 );
             return true;
@@ -69,36 +66,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(rentedFilmFragment, "My rentals");
         viewPager.setAdapter(adapter);
     }
-
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        switch (requestCode) {
-//            case Constants.FOTO_MAKEN:
-//                Uri selectedImage;
-//                if (resultCode == RESULT_OK) {
-//                    Bitmap photo = (Bitmap) data.getExtras().get("data");
-//                    selectedImage = getImageUri(getApplicationContext(), photo);
-//
-//                    File finalFile = new File(getRealPathFromURI(selectedImage));
-////                  test of image_path correct gepakt wordt
-//                    fotoImageView.setImageURI(selectedImage);
-//                    fotoButton.setText(R.string.fotoWijzigen);
-//                    imagePath = finalFile.toString();
-//
-//                }
-//                break;
-//            case Constants.FOTO_KIEZEN:
-//                if (resultCode == RESULT_OK) {
-//                    selectedImage = data.getData();
-//                    String image_path = getRealPathFromURI(selectedImage);
-//                    fotoImageView.setImageURI(selectedImage);
-//                    fotoButton.setText(R.string.fotoWijzigen);
-//                    imagePath = image_path;
-//
-//                }
-//        }
-//    }
-
 
     public class SectionsPageAdapter extends FragmentPagerAdapter {
 

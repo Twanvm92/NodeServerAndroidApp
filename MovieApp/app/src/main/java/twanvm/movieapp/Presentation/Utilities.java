@@ -7,10 +7,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by twanv on 13-6-2017.
- */
-
 public class Utilities {
 
     public static void displayMessage(Context context, String toastString){

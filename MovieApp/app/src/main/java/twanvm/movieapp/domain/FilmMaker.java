@@ -8,10 +8,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by Maikel on 14-6-2017.
- */
-
 public class FilmMaker {
 
     public static final String FILM_ID = "film_id";
@@ -27,7 +23,6 @@ public class FilmMaker {
         ArrayList<Film> filmList = new ArrayList<>();
 
         try{
-//            JSONArray jsonArray = response.getJSONArray(CITY_RESULT);
 
             for(int i = 0; i < response.length(); i++){
                 JSONObject jsonObject = response.getJSONObject(i);
@@ -44,7 +39,7 @@ public class FilmMaker {
                 filmList.add(film);
             }
         } catch( JSONException ex) {
-            Log.e("CityMapper", "onPostExecute JSONException " + ex.getLocalizedMessage());
+            Log.e("FilmMaker", "onPostExecute JSONException " + ex.getLocalizedMessage());
         }
         return filmList;
     }

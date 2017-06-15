@@ -39,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity implements FilmAPIReques
     // UI references.
     private AutoCompleteTextView mUsernameView;
     private EditText mPasswordView;
-    private TextView mLoginView;
+    private TextView mLoginView, mMainView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -74,6 +74,7 @@ public class RegisterActivity extends AppCompatActivity implements FilmAPIReques
         mProgressView = findViewById(R.id.login_progress);
 
         mLoginView = (TextView) findViewById(R.id.link_to_login);
+        mMainView = (TextView) findViewById(R.id.link_to_main);
 
         mLoginView.setOnClickListener(new OnClickListener() {
             @Override
@@ -82,6 +83,16 @@ public class RegisterActivity extends AppCompatActivity implements FilmAPIReques
                 Intent login = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(login);
                 // Close the current activity
+                finish();
+            }
+        });
+
+        mMainView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the main activity, and close the login activity
+                Intent login = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(login);
                 finish();
             }
         });
@@ -135,8 +146,6 @@ public class RegisterActivity extends AppCompatActivity implements FilmAPIReques
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             showProgress(true);
             movieAPIRequest = new FilmAPIRequest(this, this);
             movieAPIRequest.HandleRegistration(username, password);
