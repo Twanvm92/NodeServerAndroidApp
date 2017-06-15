@@ -1,4 +1,4 @@
-before_install: cd E:/Avans/Periode1.4/Programmeren4/TentamenProgrammeren/MovieApp
+before_install: cd ./MovieApp
 language: java
 sudo: false
 install: true
