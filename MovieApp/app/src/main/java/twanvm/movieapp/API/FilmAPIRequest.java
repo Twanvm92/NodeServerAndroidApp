@@ -1,48 +1,55 @@
 package twanvm.movieapp.API;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Movie;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import twanvm.movieapp.Constants;
+import twanvm.movieapp.Presentation.LoginActivity;
 import twanvm.movieapp.Presentation.Utilities;
 import twanvm.movieapp.R;
+import twanvm.movieapp.domain.Film;
+import twanvm.movieapp.domain.FilmMaker;
 
-/**
- * Created by twanv on 13-6-2017.
- */
-
-public class MovieAPIRequest {
+public class FilmAPIRequest {
 
     private Context context;
     public final String TAG = this.getClass().getSimpleName();
 
     // De aanroepende class implementeert deze interface.
-    private MovieAPIRequest.MovieAPIListener listener;
-    private MovieAPIRequest.LoginListener logListener;
-    private MovieAPIRequest.RegisterListener regListener;
+    private FilmAPIRequest.FilmAPIListener filmListener;
+    private FilmAPIRequest.LoginListener logListener;
+    private FilmAPIRequest.RegisterListener regListener;
 
-    public MovieAPIRequest(Context context, MovieAPIListener listener) {
+    public FilmAPIRequest(Context context, FilmAPIListener filmListener) {
         this.context = context;
-        this.listener = listener;
+        this.filmListener = filmListener;
     }
 
-    public MovieAPIRequest(Context context, LoginListener logListener) {
+    public FilmAPIRequest(Context context, LoginListener logListener) {
         this.context = context;
         this.logListener = logListener;
     }
 
-    public MovieAPIRequest(Context context, RegisterListener regListener) {
+    public FilmAPIRequest(Context context, RegisterListener regListener) {
         this.context = context;
         this.regListener = regListener;
     }
@@ -72,10 +79,12 @@ public class MovieAPIRequest {
                             // totdat het token expired.
                             try {
                                 String token = response.getString("token");
+                                int customer_id = response.getInt("customer_id");
                                 SharedPreferences sharedPref = context.getSharedPreferences(
                                         context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putString(context.getString(R.string.saved_token), token);
+                                editor.putInt("saved_user", customer_id);
                                 editor.commit();
 
                                 if(logListener != null) {
@@ -162,8 +171,92 @@ public class MovieAPIRequest {
         return;
     }
 
-    public interface MovieAPIListener {
+    /**
+     * Verstuur een GET request om films op te halen.
+     */
+    public void handleGetFilms(int count, int offset) {
 
+        Log.i(TAG, "handleGetFilms");
+        JsonArrayRequest jsArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                Constants.URL_FILMS + "?count=" + count + "&offset=" + offset,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        ArrayList<Film> result = FilmMaker.makeFilmList(response);
+                        filmListener.onFilmsAvailable(result);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        filmListener.handleResponseError(error);
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        // Access the RequestQueue through your singleton class.
+        VolleyRequestQueue.getInstance(context).addToRequestQueue(jsArrayRequest);
+    }
+
+
+    /**
+     * Verstuur een GET request om films op te halen.
+     */
+    public void handleGetRentedFilms(int customerID) {
+
+        Log.i(TAG, "handleGetFilms");
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        final String token = sharedPref.getString("saved_token", "");
+        if(token != null && !token.equals("")) {
+
+            JsonArrayRequest jsArrayRequest = new JsonArrayRequest(
+                    Request.Method.GET,
+                    Constants.URL_RENTED_FILMS + customerID,
+                    null,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            ArrayList<Film> result = FilmMaker.makeFilmList(response);
+                            filmListener.onFilmsAvailable(result);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            filmListener.handleResponseError(error);
+                       }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Token", token);
+                    return headers;
+                }
+            };
+
+            // Access the RequestQueue through your singleton class.
+            VolleyRequestQueue.getInstance(context).addToRequestQueue(jsArrayRequest);
+        }
+    }
+
+    public interface FilmAPIListener {
+        // Callback function to return a fresh list of films
+        void onFilmsAvailable(ArrayList<Film> films);
+
+        // Callback function to handle a single added film.
+        void onFilmAvailable(Film film);
+
+        // Callback to handle serverside API errors
         void handleResponseError(VolleyError error);
     }
 

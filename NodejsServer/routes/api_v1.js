@@ -7,7 +7,7 @@ var bcrypt = require('bcrypt');
 var dateTimeHandler = require('../dateTimeHandler');
 
 // A token needs to be provided by the user except for certain requests
-router.all( new RegExp(/^(?!.*\/films|\/about$|\/info$|\/login$|\/register$).*$/m), function (request, response, next) {
+router.all( new RegExp(/^(?!.*\/films\/\d+$|\/films$|\/login$|\/register$).*$/m), function (request, response, next) {
     console.log("Validating token...")
     var token = (request.header('Token')) || '';
 

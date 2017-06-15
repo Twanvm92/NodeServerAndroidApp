@@ -22,18 +22,18 @@ import android.widget.TextView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 
-import twanvm.movieapp.API.MovieAPIRequest;
+import twanvm.movieapp.API.FilmAPIRequest;
 import twanvm.movieapp.R;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity implements MovieAPIRequest.RegisterListener {
+public class RegisterActivity extends AppCompatActivity implements FilmAPIRequest.RegisterListener {
 
     /**
      * Keep track of the register task to ensure we can cancel it if requested.
      */
-    private MovieAPIRequest movieAPIRequest = null;
+    private FilmAPIRequest movieAPIRequest = null;
     public final String TAG = this.getClass().getSimpleName();
 
     // UI references.
@@ -138,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity implements MovieAPIReque
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            movieAPIRequest = new MovieAPIRequest(this, this);
+            movieAPIRequest = new FilmAPIRequest(this, this);
             movieAPIRequest.HandleRegistration(username, password);
         }
     }

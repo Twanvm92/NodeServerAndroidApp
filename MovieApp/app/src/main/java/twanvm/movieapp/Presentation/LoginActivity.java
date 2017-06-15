@@ -6,8 +6,6 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
-import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,18 +22,18 @@ import android.widget.TextView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 
-import twanvm.movieapp.API.MovieAPIRequest;
+import twanvm.movieapp.API.FilmAPIRequest;
 import twanvm.movieapp.R;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.LoginListener {
+public class LoginActivity extends AppCompatActivity implements FilmAPIRequest.LoginListener {
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private MovieAPIRequest movieAPIRequest = null;
+    private FilmAPIRequest movieAPIRequest = null;
     public final String TAG = this.getClass().getSimpleName();
 
     // UI references.
@@ -132,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements MovieAPIRequest.
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            movieAPIRequest = new MovieAPIRequest(this, this);
+            movieAPIRequest = new FilmAPIRequest(this, this);
             movieAPIRequest.HandleLogin(username, password);
         }
     }
