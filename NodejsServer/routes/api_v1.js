@@ -171,7 +171,7 @@ router.get('/films/:filmid', function(request, response, next) {
 router.get('/rentals/:userid', function(request, response) {
     var userID = request.params.userid;
     var query_str = {
-        sql: query_str = 'SELECT * FROM view_rental WHERE customer_id = "' + userID + '";',
+        sql: query_str = 'SELECT * FROM view_rental WHERE customer_id = "' + userID + '" AND return_date IS NULL;',
         values: [],
         timeout: 5000
     }
@@ -212,7 +212,7 @@ router.post('/rentals/:userid/:inventoryid', function(request, response) {
                 return response.status(400).json(error);
 
             }
-            console.log("Rental added to database")
+            console.log("Rental added to database with inventory_id: " + inventoryID);
             response.status(200).json({message: "Rental added to database"});
         });
     });

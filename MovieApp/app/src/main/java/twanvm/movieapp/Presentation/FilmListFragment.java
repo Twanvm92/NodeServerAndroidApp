@@ -28,6 +28,7 @@ import twanvm.movieapp.API.FilmAPIRequest;
 import twanvm.movieapp.R;
 import twanvm.movieapp.adapter.FilmAdapter;
 import twanvm.movieapp.domain.Film;
+import twanvm.movieapp.domain.RentedFilm;
 
 public class FilmListFragment extends Fragment implements FilmAPIRequest.FilmAPIListener {
 
@@ -151,16 +152,29 @@ public class FilmListFragment extends Fragment implements FilmAPIRequest.FilmAPI
         filmAdapter.notifyDataSetChanged();
     }
 
-
     @Override
-    public void onFilmAvailable(Film film) {
-        films.add(film);
-        filmAdapter.notifyDataSetChanged();
+    public void onRentedFilmsAvailable(ArrayList<RentedFilm> rentedFilms) {
+
     }
 
     @Override
     public void handleResponseError(VolleyError error) {
         Log.e(TAG, error.toString());
+    }
+
+    @Override
+    public void isFilmRented(boolean filmRented) {
+
+    }
+
+    @Override
+    public void handleLoginNeeded(boolean loginNeeded) {
+
+    }
+
+    @Override
+    public void isFilmReturned(boolean filmReturned) {
+
     }
 
     /**

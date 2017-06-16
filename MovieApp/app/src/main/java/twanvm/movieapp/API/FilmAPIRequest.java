@@ -17,18 +17,17 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import twanvm.movieapp.Constants;
-import twanvm.movieapp.Presentation.LoginActivity;
 import twanvm.movieapp.Presentation.Utilities;
 import twanvm.movieapp.R;
 import twanvm.movieapp.domain.Film;
 import twanvm.movieapp.domain.FilmMaker;
 import twanvm.movieapp.domain.InventoryFilmMaker;
+import twanvm.movieapp.domain.RentedFilm;
+import twanvm.movieapp.domain.RentedFilmMaker;
 
 public class FilmAPIRequest {
 
@@ -201,8 +200,8 @@ public class FilmAPIRequest {
                     new Response.Listener<JSONArray>() {
                         @Override
                         public void onResponse(JSONArray response) {
-                            ArrayList<Film> result = FilmMaker.makeFilmList(response);
-                            filmListener.onFilmsAvailable(result);
+                            ArrayList<RentedFilm> result = RentedFilmMaker.makeRentedFilmList(response);
+                            filmListener.onRentedFilmsAvailable(result);
                         }
                     },
                     new Response.ErrorListener() {
@@ -224,6 +223,7 @@ public class FilmAPIRequest {
             VolleyRequestQueue.getInstance(context).addToRequestQueue(jsArrayRequest);
         }
     }
+
 
     public void handleGetInventoryFilms(int filmID) {
 
@@ -254,18 +254,114 @@ public class FilmAPIRequest {
 
         // Access the RequestQueue through your singleton class.
         VolleyRequestQueue.getInstance(context).addToRequestQueue(jsArrayRequest);
+    }
+
+
+    public void handleReturnRentedFilms(int inventoryID) {
+
+        Log.i(TAG, "handleReturnRentedFilms");
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        final String token = sharedPref.getString("saved_token", "");
+        final int userID = sharedPref.getInt("saved_userID", 0);
+        if(token != null && !token.equals("") && userID != 0) {
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.PUT,
+                    Constants.URL_RENTED_FILMS + userID + "/" + inventoryID,
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            filmListener.isFilmReturned(true);
+                            Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("handleReturnRentedFilms", error.toString());
+                            if (error.toString().equals("com.android.volley.AuthFailureError")) {
+                                filmListener.handleLoginNeeded(true);
+                            }
+                            filmListener.handleResponseError(error);
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Token", token);
+                    return headers;
+                }
+            };
+
+            // Access the RequestQueue through your singleton class.
+            VolleyRequestQueue.getInstance(context).addToRequestQueue(jsonObjectRequest);
+        }
+
+    }
+
+    public void handleRentFilm(int inventoryID) {
+
+        Log.i(TAG, "handleRentFilms");
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        final String token = sharedPref.getString("saved_token", "");
+        final int userID = sharedPref.getInt("saved_userID", 0);
+        if(token != null && !token.equals("") && userID != 0) {
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.POST,
+                    Constants.URL_RENTED_FILMS + userID + "/" + inventoryID,
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            filmListener.isFilmRented(true);
+                            Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("handleRentFilms", error.toString());
+                            if (error.toString().equals("com.android.volley.AuthFailureError")) {
+                                filmListener.handleLoginNeeded(true);
+                            }
+                            filmListener.handleResponseError(error);
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Token", token);
+                    return headers;
+                }
+            };
+
+            // Access the RequestQueue through your singleton class.
+            VolleyRequestQueue.getInstance(context).addToRequestQueue(jsonObjectRequest);
+        }
 
     }
 
     public interface FilmAPIListener {
+
+        void handleLoginNeeded(boolean loginNeeded);
+
+        void isFilmReturned(boolean filmReturned);
+
         // Callback function to return a fresh list of films
         void onFilmsAvailable(ArrayList<Film> films);
 
-        // Callback function to handle a single added film.
-        void onFilmAvailable(Film film);
+        void onRentedFilmsAvailable(ArrayList<RentedFilm> rentedFilms);
 
         // Callback to handle serverside API errors
         void handleResponseError(VolleyError error);
+
+        void isFilmRented(boolean filmRented);
     }
 
     public interface LoginListener {

@@ -129,18 +129,7 @@
         app:layout_constraintTop_toBottomOf="@+id/activityFilmDetail_tv_descriptionText"
         app:layout_constraintLeft_toLeftOf="@+id/activityFilmDetail_tv_descriptionText" />
 
-    <TextView
-        android:id="@android:id/empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="@string/title_film_lv_no_items"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="@+id/activityFilmDetail_tv_inventoryTitle"
-        app:layout_constraintTop_toBottomOf="@+id/activityFilmDetail_tv_inventoryTitle" />
+
 
     <ListView
         android:id="@+id/activityFilmDetail_lv_inventory"
@@ -156,4 +145,18 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activityFilmDetail_tv_inventoryTitle"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/emptyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/title_film_lv_no_items"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@+id/activityFilmDetail_tv_inventoryTitle"
+        app:layout_constraintTop_toBottomOf="@+id/activityFilmDetail_tv_inventoryTitle"
+        android:visibility="gone"/>
 </android.support.constraint.ConstraintLayout>

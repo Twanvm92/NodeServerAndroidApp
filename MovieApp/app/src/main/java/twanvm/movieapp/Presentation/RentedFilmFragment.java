@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
@@ -23,16 +25,18 @@ import java.util.ArrayList;
 import twanvm.movieapp.API.FilmAPIRequest;
 import twanvm.movieapp.R;
 import twanvm.movieapp.adapter.FilmAdapter;
+import twanvm.movieapp.adapter.FilmRentedAdapter;
 import twanvm.movieapp.domain.Film;
+import twanvm.movieapp.domain.RentedFilm;
 
 import static android.view.View.VISIBLE;
 
-public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmAPIListener {
+public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmAPIListener, FilmRentedAdapter.FilmAdapterListener {
 
     public final String TAG = this.getClass().getSimpleName();
     private ListView listViewFilms;
     private ArrayAdapter filmAdapter;
-    private ArrayList<Film> films = new ArrayList<>();
+    private ArrayList<RentedFilm> rentedFilms = new ArrayList<>();
     private TextView notLoggedIn;
 
 
@@ -52,16 +56,16 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rented_film, container, false);
+
         listViewFilms = (ListView) view.findViewById(R.id.fragment_rented_film_ListView);
-        filmAdapter = new FilmAdapter(getContext(), films);
+        filmAdapter = new FilmRentedAdapter(getContext(), rentedFilms, this);
         listViewFilms.setAdapter(filmAdapter);
         // detail scherm nog uitwerken
         listViewFilms.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(view.getContext(), FilmDetailActivity.class);
-                Film film = films.get(position);
-                i.putExtra("Film", (Serializable) film);
+//                RentedFilm rentedFilm = rentedFilms.get(position);
                 startActivity(i);
             }
         });
@@ -100,20 +104,19 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
     }
 
     @Override
-    public void onFilmsAvailable(ArrayList<Film> filmArrayList) {
+    public void onFilmsAvailable(ArrayList<Film> films) {
 
-        Log.i(TAG, "We have " + filmArrayList.size() + " films in our list");
-
-        films.clear();
-        for(int i = 0; i < filmArrayList.size(); i++) {
-            films.add(filmArrayList.get(i));
-        }
-        filmAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onFilmAvailable(Film film) {
-        films.add(film);
+    public void onRentedFilmsAvailable(ArrayList<RentedFilm> filmArrayList) {
+
+        Log.i(TAG, "We have " + filmArrayList.size() + " rented films in our list");
+
+        rentedFilms.clear();
+        for(int i = 0; i < filmArrayList.size(); i++) {
+            rentedFilms.add(filmArrayList.get(i));
+        }
         filmAdapter.notifyDataSetChanged();
     }
 
@@ -123,8 +126,47 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
         Log.e(TAG, error.toString());
     }
 
+    @Override
+    public void isFilmRented(boolean filmRented) {
+
+    }
+
+    @Override
+    public void handleLoginNeeded(boolean loginNeeded) {
+
+    }
+
+    @Override
+    public void isFilmReturned(boolean filmReturned) {
+        if (filmReturned) {
+            getRentedFilms(userAvailable());
+        }
+    }
+
     private void getRentedFilms(int customerID){
         FilmAPIRequest request = new FilmAPIRequest(getContext(), this);
         request.handleGetRentedFilms(customerID);
     }
+
+    @Override
+    public void isFilmReturnedAdapter (boolean filmReturned) {
+        if (filmReturned) {
+            getRentedFilms(userAvailable());
+        }
+    }
+
+    @Override
+    public void handleLoginNeededAdapter (boolean loginNeeded) {
+        if (loginNeeded) {
+            SharedPreferences sharedPref = getContext().getSharedPreferences(
+                    getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.remove("saved_token");
+            Intent i = new Intent(getContext(), LoginActivity.class);
+            Toast.makeText(getContext(), "Token expired, please login again", Toast.LENGTH_SHORT).show();
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            getContext().startActivity(i);
+        }
+    }
+
 }
