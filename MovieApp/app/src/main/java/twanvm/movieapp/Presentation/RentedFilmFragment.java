@@ -127,6 +127,11 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
     }
 
     @Override
+    public void isFilmRented(boolean filmRented) {
+
+    }
+
+    @Override
     public void handleLoginNeeded(boolean loginNeeded) {
 
     }

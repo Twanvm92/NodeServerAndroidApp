@@ -17,17 +17,15 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import twanvm.movieapp.Constants;
-import twanvm.movieapp.Presentation.LoginActivity;
 import twanvm.movieapp.Presentation.Utilities;
 import twanvm.movieapp.R;
 import twanvm.movieapp.domain.Film;
 import twanvm.movieapp.domain.FilmMaker;
+import twanvm.movieapp.domain.InventoryFilmMaker;
 import twanvm.movieapp.domain.RentedFilm;
 import twanvm.movieapp.domain.RentedFilmMaker;
 
@@ -226,6 +224,39 @@ public class FilmAPIRequest {
         }
     }
 
+
+    public void handleGetInventoryFilms(int filmID) {
+
+        JsonArrayRequest jsArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                Constants.URL_INVENTORY_FILMS + filmID,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        ArrayList<Film> result = InventoryFilmMaker.makeInventoryFilmList(response);
+                        filmListener.onFilmsAvailable(result);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        filmListener.handleResponseError(error);
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        // Access the RequestQueue through your singleton class.
+        VolleyRequestQueue.getInstance(context).addToRequestQueue(jsArrayRequest);
+    }
+
+
     public void handleReturnRentedFilms(int inventoryID) {
 
         Log.i(TAG, "handleReturnRentedFilms");
@@ -268,6 +299,52 @@ public class FilmAPIRequest {
             // Access the RequestQueue through your singleton class.
             VolleyRequestQueue.getInstance(context).addToRequestQueue(jsonObjectRequest);
         }
+
+    }
+
+    public void handleRentFilm(int inventoryID) {
+
+        Log.i(TAG, "handleRentFilms");
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        final String token = sharedPref.getString("saved_token", "");
+        final int userID = sharedPref.getInt("saved_userID", 0);
+        if(token != null && !token.equals("") && userID != 0) {
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.POST,
+                    Constants.URL_RENTED_FILMS + userID + "/" + inventoryID,
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            filmListener.isFilmRented(true);
+                            Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("handleRentFilms", error.toString());
+                            if (error.toString().equals("com.android.volley.AuthFailureError")) {
+                                filmListener.handleLoginNeeded(true);
+                            }
+                            filmListener.handleResponseError(error);
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Token", token);
+                    return headers;
+                }
+            };
+
+            // Access the RequestQueue through your singleton class.
+            VolleyRequestQueue.getInstance(context).addToRequestQueue(jsonObjectRequest);
+        }
+
     }
 
     public interface FilmAPIListener {
@@ -283,6 +360,8 @@ public class FilmAPIRequest {
 
         // Callback to handle serverside API errors
         void handleResponseError(VolleyError error);
+
+        void isFilmRented(boolean filmRented);
     }
 
     public interface LoginListener {

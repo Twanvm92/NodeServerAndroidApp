@@ -142,7 +142,9 @@ router.get('/films/:filmid', function(request, response, next) {
 
     if (filmID > 0) {
         var query_str = {
-            sql: query_str = 'SELECT * FROM view_rental WHERE film_id = "' + filmID + '";',
+            sql: query_str = 'SELECT * FROM `1063`.view_rental WHERE film_id = ' + filmID + ' AND' +
+                ' (rental_id = (SELECT MAX(rental_id) FROM `1063`.view_rental as r' +
+                ' WHERE r.inventory_id = `1063`.view_rental.inventory_id) OR rental_id is NULL);',
             values: [],
             timeout: 5000
         }
@@ -210,7 +212,7 @@ router.post('/rentals/:userid/:inventoryid', function(request, response) {
                 return response.status(400).json(error);
 
             }
-            console.log("Rental added to database")
+            console.log("Rental added to database with inventory_id: " + inventoryID);
             response.status(200).json({message: "Rental added to database"});
         });
     });
