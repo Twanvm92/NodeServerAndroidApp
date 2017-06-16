@@ -160,6 +160,11 @@ public class FilmListFragment extends Fragment implements FilmAPIRequest.FilmAPI
     }
 
     @Override
+    public void handleLoginNeeded(boolean loginNeeded) {
+
+    }
+
+    @Override
     public void isFilmReturned(boolean filmReturned) {
 
     }

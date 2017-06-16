@@ -50,10 +50,12 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.activityMain_item_login) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivityForResult(intent, 1 );
+            finish();
             return true;
         } else if (id == R.id.activityMain_item_register) {
             Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
             startActivityForResult(intent, 1 );
+            finish();
             return true;
         }
 

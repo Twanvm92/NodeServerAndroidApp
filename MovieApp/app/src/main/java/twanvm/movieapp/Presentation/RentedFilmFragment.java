@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
@@ -126,9 +127,13 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
     }
 
     @Override
+    public void handleLoginNeeded(boolean loginNeeded) {
+
+    }
+
+    @Override
     public void isFilmReturned(boolean filmReturned) {
         if (filmReturned) {
-            Log.e(TAG, "test");
             getRentedFilms(userAvailable());
         }
     }
@@ -138,16 +143,25 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
         request.handleGetRentedFilms(customerID);
     }
 
-    private void returnRentedFilms(int inventoryID){
-        FilmAPIRequest request = new FilmAPIRequest(getContext(), this);
-        request.handleReturnRentedFilms(inventoryID);
-    }
-
     @Override
     public void isFilmReturnedAdapter (boolean filmReturned) {
         if (filmReturned) {
-            Log.e(TAG, "test");
             getRentedFilms(userAvailable());
         }
     }
+
+    @Override
+    public void handleLoginNeededAdapter (boolean loginNeeded) {
+        if (loginNeeded) {
+            SharedPreferences sharedPref = getContext().getSharedPreferences(
+                    getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.remove("saved_token");
+            Intent i = new Intent(getContext(), LoginActivity.class);
+            Toast.makeText(getContext(), "Token expired, please login again", Toast.LENGTH_SHORT).show();
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            getContext().startActivity(i);
+        }
+    }
+
 }

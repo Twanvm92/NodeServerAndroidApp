@@ -218,5 +218,11 @@ public class LoginActivity extends AppCompatActivity implements FilmAPIRequest.L
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
 

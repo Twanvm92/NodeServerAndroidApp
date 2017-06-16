@@ -202,7 +202,6 @@ public class FilmAPIRequest {
                     new Response.Listener<JSONArray>() {
                         @Override
                         public void onResponse(JSONArray response) {
-                            Log.e(TAG, response.toString());
                             ArrayList<RentedFilm> result = RentedFilmMaker.makeRentedFilmList(response);
                             filmListener.onRentedFilmsAvailable(result);
                         }
@@ -250,6 +249,10 @@ public class FilmAPIRequest {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            Log.e("handleReturnRentedFilms", error.toString());
+                            if (error.toString().equals("com.android.volley.AuthFailureError")) {
+                                filmListener.handleLoginNeeded(true);
+                            }
                             filmListener.handleResponseError(error);
                         }
                     }) {
@@ -268,6 +271,8 @@ public class FilmAPIRequest {
     }
 
     public interface FilmAPIListener {
+
+        void handleLoginNeeded(boolean loginNeeded);
 
         void isFilmReturned(boolean filmReturned);
 

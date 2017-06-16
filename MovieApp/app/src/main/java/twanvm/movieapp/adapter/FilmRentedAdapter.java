@@ -75,6 +75,13 @@ public class FilmRentedAdapter extends ArrayAdapter<RentedFilm> implements FilmA
     }
 
     @Override
+    public void handleLoginNeeded(boolean loginNeeded) {
+        if (loginNeeded){
+            filmAdapterListener.handleLoginNeededAdapter(loginNeeded);
+        }
+    }
+
+    @Override
     public void isFilmReturned(boolean filmReturned) {
         if (filmReturned){
             filmAdapterListener.isFilmReturnedAdapter(filmReturned);
@@ -83,5 +90,6 @@ public class FilmRentedAdapter extends ArrayAdapter<RentedFilm> implements FilmA
 
     public interface FilmAdapterListener {
         void isFilmReturnedAdapter(boolean filmReturned);
+        void handleLoginNeededAdapter(boolean loginNeeded);
     }
 }
