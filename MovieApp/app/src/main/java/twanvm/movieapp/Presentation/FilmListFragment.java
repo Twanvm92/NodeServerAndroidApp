@@ -59,7 +59,10 @@ public class FilmListFragment extends Fragment implements FilmAPIRequest.FilmAPI
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(view.getContext(), FilmDetailActivity.class);
                 Film film = films.get(position);
-                i.putExtra("Film", (Serializable) film);
+                int filmID = film.getId();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("film", film);
+                i.putExtras(bundle);
                 startActivity(i);
             }
         });

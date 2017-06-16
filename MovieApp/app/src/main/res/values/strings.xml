@@ -48,5 +48,9 @@
     <string name="title_film_descr">Description:</string>
     <string name="title_film_divider">|</string>
     <string name="title_film_inven">Inventory:</string>
+    <string name="title_film_item">Item:</string>
+    <string name="title_film_btn_available">Rent item</string>
+    <string name="title_film_btn_unavailable">Item unavailable</string>
+    <string name="title_film_lv_no_items">No items for rent available</string>
 
 </resources>

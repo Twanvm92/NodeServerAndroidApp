@@ -28,6 +28,7 @@ import twanvm.movieapp.Presentation.Utilities;
 import twanvm.movieapp.R;
 import twanvm.movieapp.domain.Film;
 import twanvm.movieapp.domain.FilmMaker;
+import twanvm.movieapp.domain.InventoryFilmMaker;
 
 public class FilmAPIRequest {
 
@@ -187,7 +188,7 @@ public class FilmAPIRequest {
 
     public void handleGetRentedFilms(int customerID) {
 
-        Log.i(TAG, "handleGetFilms");
+        Log.i(TAG, "handleGetRentedFilms");
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         final String token = sharedPref.getString("saved_token", "");
@@ -222,6 +223,38 @@ public class FilmAPIRequest {
             // Access the RequestQueue through your singleton class.
             VolleyRequestQueue.getInstance(context).addToRequestQueue(jsArrayRequest);
         }
+    }
+
+    public void handleGetInventoryFilms(int filmID) {
+
+        JsonArrayRequest jsArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                Constants.URL_INVENTORY_FILMS + filmID,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        ArrayList<Film> result = InventoryFilmMaker.makeInventoryFilmList(response);
+                        filmListener.onFilmsAvailable(result);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        filmListener.handleResponseError(error);
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        // Access the RequestQueue through your singleton class.
+        VolleyRequestQueue.getInstance(context).addToRequestQueue(jsArrayRequest);
+
     }
 
     public interface FilmAPIListener {
