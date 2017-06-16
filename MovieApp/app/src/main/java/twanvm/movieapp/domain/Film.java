@@ -3,13 +3,13 @@ package twanvm.movieapp.domain;
 import java.io.Serializable;
 
 public class Film implements Serializable {
-    private int id;
-    private String title;
-    private String description;
-    private int release_year;
-    private double rental_rate;
-    private int length;
-    private String rating;
+    protected int id;
+    protected String title;
+    protected String description;
+    protected int release_year;
+    protected double rental_rate;
+    protected int length;
+    protected String rating;
 
     public Film(int id, String title, String description, int release_year, double rental_rate, int length, String rating) {
         this.id = id;
