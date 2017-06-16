@@ -39,4 +39,14 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_register">Register</string>
+
+
+    <!--Strings related to FilmDetailActivity-->
+    <string name="title_film_year">Year:</string>
+    <string name="title_film_length">Length:</string>
+    <string name="title_film_rating">Rating:</string>
+    <string name="title_film_descr">Description:</string>
+    <string name="title_film_divider">|</string>
+    <string name="title_film_inven">Inventory:</string>
+
 </resources>
