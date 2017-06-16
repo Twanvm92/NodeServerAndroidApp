@@ -189,7 +189,7 @@ public class FilmAPIRequest {
 
     public void handleGetRentedFilms(int customerID) {
 
-        Log.i(TAG, "handleGetFilms");
+        Log.i(TAG, "handleGetRentedFilms");
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         final String token = sharedPref.getString("saved_token", "");
@@ -202,6 +202,7 @@ public class FilmAPIRequest {
                     new Response.Listener<JSONArray>() {
                         @Override
                         public void onResponse(JSONArray response) {
+                            Log.e(TAG, response.toString());
                             ArrayList<RentedFilm> result = RentedFilmMaker.makeRentedFilmList(response);
                             filmListener.onRentedFilmsAvailable(result);
                         }
@@ -267,6 +268,9 @@ public class FilmAPIRequest {
     }
 
     public interface FilmAPIListener {
+
+        void isFilmReturned(boolean filmReturned);
+
         // Callback function to return a fresh list of films
         void onFilmsAvailable(ArrayList<Film> films);
 
@@ -274,8 +278,6 @@ public class FilmAPIRequest {
 
         // Callback to handle serverside API errors
         void handleResponseError(VolleyError error);
-
-        void isFilmReturned(boolean filmReturned);
     }
 
     public interface LoginListener {

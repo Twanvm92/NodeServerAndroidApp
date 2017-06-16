@@ -30,7 +30,7 @@ import twanvm.movieapp.domain.RentedFilm;
 
 import static android.view.View.VISIBLE;
 
-public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmAPIListener {
+public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmAPIListener, FilmRentedAdapter.FilmAdapterListener {
 
     public final String TAG = this.getClass().getSimpleName();
     private ListView listViewFilms;
@@ -55,8 +55,9 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rented_film, container, false);
+
         listViewFilms = (ListView) view.findViewById(R.id.fragment_rented_film_ListView);
-        filmAdapter = new FilmRentedAdapter(getContext(), rentedFilms);
+        filmAdapter = new FilmRentedAdapter(getContext(), rentedFilms, this);
         listViewFilms.setAdapter(filmAdapter);
         // detail scherm nog uitwerken
         listViewFilms.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -126,11 +127,27 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
 
     @Override
     public void isFilmReturned(boolean filmReturned) {
-        getRentedFilms(userAvailable());
+        if (filmReturned) {
+            Log.e(TAG, "test");
+            getRentedFilms(userAvailable());
+        }
     }
 
     private void getRentedFilms(int customerID){
         FilmAPIRequest request = new FilmAPIRequest(getContext(), this);
         request.handleGetRentedFilms(customerID);
+    }
+
+    private void returnRentedFilms(int inventoryID){
+        FilmAPIRequest request = new FilmAPIRequest(getContext(), this);
+        request.handleReturnRentedFilms(inventoryID);
+    }
+
+    @Override
+    public void isFilmReturnedAdapter (boolean filmReturned) {
+        if (filmReturned) {
+            Log.e(TAG, "test");
+            getRentedFilms(userAvailable());
+        }
     }
 }

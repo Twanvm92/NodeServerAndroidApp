@@ -19,8 +19,13 @@ import twanvm.movieapp.domain.Film;
 import twanvm.movieapp.domain.RentedFilm;
 
 public class FilmRentedAdapter extends ArrayAdapter<RentedFilm> implements FilmAPIRequest.FilmAPIListener{
-    public FilmRentedAdapter(Context context, ArrayList<RentedFilm> rentedFilms){
+    private Context context;
+    private FilmAdapterListener filmAdapterListener;
+
+    public FilmRentedAdapter(Context context, ArrayList<RentedFilm> rentedFilms, FilmAdapterListener filmAdapterListener){
         super(context, 0, rentedFilms);
+        this.context = context;
+        this.filmAdapterListener = filmAdapterListener;
     }
 
     @Override
@@ -50,7 +55,7 @@ public class FilmRentedAdapter extends ArrayAdapter<RentedFilm> implements FilmA
     }
 
     private void returnRentedFilms(int inventoryID){
-        FilmAPIRequest request = new FilmAPIRequest(getContext(), this);
+        FilmAPIRequest request = new FilmAPIRequest(context, this);
         request.handleReturnRentedFilms(inventoryID);
     }
 
@@ -71,6 +76,12 @@ public class FilmRentedAdapter extends ArrayAdapter<RentedFilm> implements FilmA
 
     @Override
     public void isFilmReturned(boolean filmReturned) {
+        if (filmReturned){
+            filmAdapterListener.isFilmReturnedAdapter(filmReturned);
+        }
+    }
 
+    public interface FilmAdapterListener {
+        void isFilmReturnedAdapter(boolean filmReturned);
     }
 }
