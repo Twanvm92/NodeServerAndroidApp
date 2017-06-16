@@ -1,10 +1,12 @@
 package twanvm.movieapp.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by twanv on 16-6-2017.
  */
 
-public class RentedFilm extends Film {
+public class RentedFilm extends Film implements Serializable {
     private int inventory_id;
 
     public RentedFilm(int id, String title, String description,
