@@ -123,6 +123,16 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
     @Override
     public void handleResponseError(VolleyError error) {
         notLoggedIn.setVisibility(VISIBLE);
+        SharedPreferences sharedPref = getContext().getSharedPreferences(
+                getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove("saved_token");
+        editor.remove("saved_userID");
+        editor.apply();
+
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        getActivity().finish();
+        startActivity(intent);
         Log.e(TAG, error.toString());
     }
 
@@ -157,6 +167,8 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
                     getContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.remove("saved_token");
+            editor.remove("saved_userID");
+            editor.apply();
             Intent i = new Intent(getContext(), LoginActivity.class);
             Toast.makeText(getContext(), "Token expired, please login again", Toast.LENGTH_SHORT).show();
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
