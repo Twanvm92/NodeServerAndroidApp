@@ -1,6 +1,8 @@
 package twanvm.movieapp.Presentation;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,21 +43,57 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        boolean loggedIn = false;
+
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String token = sharedPref.getString("saved_token", "");
+        if (token != null && !token.equals("")) {
+            loggedIn = true;
+        }
+
+        MenuItem loginItem = menu.findItem(R.id.activityMain_item_login);
+        MenuItem registerItem = menu.findItem(R.id.activityMain_item_register);
+        MenuItem logoutItem = menu.findItem(R.id.activityMain_item_logout);
+        if (loggedIn){
+            loginItem.setVisible(false);
+            registerItem.setVisible(false);
+            logoutItem.setVisible(true);
+        } else {
+            loginItem.setVisible(true);
+            registerItem.setVisible(true);
+            logoutItem.setVisible(false);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int id = item.getItemId();
 
         if (id == R.id.activityMain_item_login) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivityForResult(intent, 1 );
+            startActivity(intent);
             finish();
             return true;
         } else if (id == R.id.activityMain_item_register) {
             Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-            startActivityForResult(intent, 1 );
+            startActivity(intent);
+            finish();
+            return true;
+        } else if (id == R.id.activityMain_item_logout) {
+            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                    getApplicationContext().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.remove("saved_token");
+            editor.remove("saved_userID");
+            editor.apply();
+
+            Toast.makeText(getApplicationContext(), "Succesfully logged out", Toast.LENGTH_SHORT).show();
+            Intent intent = getIntent();
+            startActivity(intent);
             finish();
             return true;
         }

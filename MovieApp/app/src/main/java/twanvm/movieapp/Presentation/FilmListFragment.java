@@ -143,7 +143,7 @@ public class FilmListFragment extends Fragment implements FilmAPIRequest.FilmAPI
     @Override
     public void onFilmsAvailable(ArrayList<Film> filmArrayList) {
 
-        Log.i(TAG, "We hebben " + filmArrayList.size() + " items in de lijst");
+        Log.i(TAG, "We have " + filmArrayList.size() + "  films in our list");
 
         films.clear();
         for(int i = 0; i < filmArrayList.size(); i++) {
