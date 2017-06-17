@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
 
             Toast.makeText(getApplicationContext(), "Succesfully logged out", Toast.LENGTH_SHORT).show();
-            Intent intent = getIntent();
+            Intent intent =  new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             finish();
             return true;

@@ -146,11 +146,28 @@ public class FilmDetailActivity extends AppCompatActivity implements FilmAPIRequ
             SharedPreferences sharedPref = getSharedPreferences(
                     getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.remove("saved_token");
+
+            final String token = sharedPref.getString("saved_token", "");
+            final int userID = sharedPref.getInt("saved_userID", 0);
+            if(token != null && !token.equals("") && userID != 0) {
+                Toast.makeText(this, "Session expired, please log in again", Toast.LENGTH_SHORT).show();
+                editor.remove("saved_token");
+                editor.remove("saved_userID");
+                editor.apply();
+            } else {
+                Toast.makeText(this, "Please log in to rent an item", Toast.LENGTH_SHORT).show();
+            }
+
             Intent i = new Intent(this, LoginActivity.class);
-            Toast.makeText(this, "Token expired, please login again", Toast.LENGTH_SHORT).show();
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

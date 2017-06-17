@@ -129,7 +129,7 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
         editor.remove("saved_token");
         editor.remove("saved_userID");
         editor.apply();
-
+        Toast.makeText(getContext(), "Token expired, please login again", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getContext(), MainActivity.class);
         getActivity().finish();
         startActivity(intent);

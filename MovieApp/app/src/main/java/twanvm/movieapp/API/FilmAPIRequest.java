@@ -343,6 +343,8 @@ public class FilmAPIRequest {
 
             // Access the RequestQueue through your singleton class.
             VolleyRequestQueue.getInstance(context).addToRequestQueue(jsonObjectRequest);
+        } else {
+            filmListener.handleLoginNeeded(true);
         }
 
     }
