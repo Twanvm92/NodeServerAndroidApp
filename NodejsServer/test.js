@@ -1,8 +1,8 @@
 var chai = require('chai');
 var chaiHttp = require('chai-http');
-var server = require('../index.js');
+var server = require('./index.js');
 var should = chai.should();
-var pool = require('../database/database_connector');
+var pool = require('./database/database_connector');
 
 chai.use(chaiHttp);
 
