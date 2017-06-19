@@ -195,8 +195,8 @@ describe('Testing user information', function() {
             .get('/api/v1/films/erd')
             .end(function(err, res) {
                 res.should.be.json
-                res.should.have.status(400);
-                res.body.should.have.property('error').equal('Illegal parameters');
+                res.should.have.status(401);
+                res.body.should.have.property('error').equal('Not authorised');
                 done();
             });
     });
@@ -234,7 +234,7 @@ describe('Testing user information', function() {
     // succes
     it('Test succes POST /api/v1/rentals/:userid/:inventoryid', function(done) {
         chai.request(server)
-            .post('/api/v1/rentals/1/3')
+            .post('/api/v1/rentals/1/1234')
             .set('Token', token)
             .end(function(err, res) {
                 console.log('token: ' + token);
@@ -249,7 +249,7 @@ describe('Testing user information', function() {
     // fail
     it('Test fail POST /api/v1/rentals/:userid/:inventoryid', function(done) {
         chai.request(server)
-            .post('/api/v1/rentals/1/3')
+            .post('/api/v1/rentals/1/1234')
             .set('Token', token)
             .end(function(err, res) {
                 res.should.be.json
@@ -264,7 +264,7 @@ describe('Testing user information', function() {
     // succes
     it('Test succes PUT /api/v1/rentals/:userid/:inventoryid', function(done) {
         chai.request(server)
-            .put('/api/v1/rentals/1/3')
+            .put('/api/v1/rentals/1/1234')
             .set('Token', token)
             .end(function(err, res) {
                 res.should.be.json
@@ -293,7 +293,7 @@ describe('Testing user information', function() {
     // succes
     it('Test succes DELETE /api/v1/rentals/:userid/:inventoryid', function(done) {
         chai.request(server)
-            .delete('/api/v1/rentals/1/3')
+            .delete('/api/v1/rentals/1/1234')
             .set('Token', token)
             .end(function(err, res) {
                 res.should.be.json
