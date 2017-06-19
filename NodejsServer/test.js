@@ -249,7 +249,7 @@ describe('Testing user information', function() {
     // fail
     it('Test fail POST /api/v1/rentals/:userid/:inventoryid', function(done) {
         chai.request(server)
-            .post('/api/v1/rentals/1/3')
+            .post('/api/v1/rentals/1/8047')
             .set('Token', token)
             .end(function(err, res) {
                 res.should.be.json
