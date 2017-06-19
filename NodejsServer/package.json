@@ -4,8 +4,8 @@
   "description": "Node.js server for Android app",
   "main": "./NodejsServer/index.js",
   "scripts": {
-    "start":"node ./NodejsServer/index.js"
-    "test":"test": "mocha"
+    "start":"node ./NodejsServer/index.js",
+    "test": "mocha"
   },
   "author": "Twan van Maastricht & Maikel Jacobs",
   "license": "ISC",
