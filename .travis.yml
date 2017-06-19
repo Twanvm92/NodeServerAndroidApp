@@ -8,7 +8,7 @@ addons:
   sonarqube:
     organization: "twanvm92-github"
     token:
-      secure: "3e0613d813577cce9c841f831bcc112c351558eb
+      secure: "3e0613d813577cce9c841f831bcc112c351558eb"
 
 script:
   - ./NodejsServer/sonar-scanner
