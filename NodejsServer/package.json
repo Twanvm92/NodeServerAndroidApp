@@ -5,7 +5,7 @@
   "main": "./NodejsServer/index.js",
   "scripts": {
     "start":"node ./NodejsServer/index.js",
-    "test":"mocha"
+    "test": "mocha"
   },
   "author": "Twan van Maastricht & Maikel Jacobs",
   "license": "ISC",

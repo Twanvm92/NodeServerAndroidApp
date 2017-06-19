@@ -1,18 +1,25 @@
+language: node_js
+node_js:
+  - "7"
 dist: trusty
 sudo: required
 
-language: node_js
-node_js:
-- "stable"
 addons:
-  sonarqube:
-    organization: "twanvm92-github"
-    token:
-      secure: "3e0613d813577cce9c841f831bcc112c351558eb
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.8 - g++-4.8
+env:
+  - CXX=g++-4.8
 
-script:
-  - ./NodejsServer/sonar-scanner
+script: cd NodejsServer && npm install && npm test
+
+deploy:
+  provider: heroku
+  api_key: 05e0d2a2-7283-40b3-890b-6592c1914afb
+  app: programmeren14dag1
+
 cache:
   directories:
     - '$HOME/.sonar/cache'
-
