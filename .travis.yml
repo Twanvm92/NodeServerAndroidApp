@@ -15,6 +15,11 @@ env:
 
 script: cd NodejsServer && npm install && npm test
 
+deploy:
+  provider: heroku
+  api_key: 05e0d2a2-7283-40b3-890b-6592c1914afb
+  app: programmeren14dag1
+
 cache:
   directories:
     - '$HOME/.sonar/cache'
