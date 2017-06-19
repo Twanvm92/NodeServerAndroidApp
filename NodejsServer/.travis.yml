@@ -1,0 +1,15 @@
+dist: trusty
+sudo: required
+
+addons:
+  sonarqube:
+    organization: "twanvm92-github"
+    token:
+      secure: "3e0613d813577cce9c841f831bcc112c351558eb"
+jdk:
+  - oraclejdk8
+script:
+  - sonar-scanner
+cache:
+  directories:
+    - '$HOME/.sonar/cache'
