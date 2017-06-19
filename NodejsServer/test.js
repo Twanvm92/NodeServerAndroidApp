@@ -195,8 +195,8 @@ describe('Testing user information', function() {
             .get('/api/v1/films/erd')
             .end(function(err, res) {
                 res.should.be.json
-                res.should.have.status(400);
-                res.body.should.have.property('error').equal('Illegal parameters');
+                res.should.have.status(401);
+                res.body.should.have.property('error').equal('Not authorised');
                 done();
             });
     });
