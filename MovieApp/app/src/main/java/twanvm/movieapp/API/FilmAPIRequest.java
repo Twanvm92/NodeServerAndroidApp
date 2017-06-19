@@ -29,6 +29,10 @@ import twanvm.movieapp.domain.InventoryFilmMaker;
 import twanvm.movieapp.domain.RentedFilm;
 import twanvm.movieapp.domain.RentedFilmMaker;
 
+import static twanvm.movieapp.Constants.APPLICATION_JSON;
+import static twanvm.movieapp.Constants.CONTENT_TYPE;
+import static twanvm.movieapp.Constants.SAVED_USER_ID;
+
 public class FilmAPIRequest {
 
     private Context context;
@@ -74,7 +78,7 @@ public class FilmAPIRequest {
                                         context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putString(context.getString(R.string.saved_token), token);
-                                editor.putInt("saved_userID", customer_id);
+                                editor.putInt(SAVED_USER_ID, customer_id);
                                 editor.commit();
 
                                 if(logListener != null) {
@@ -176,7 +180,7 @@ public class FilmAPIRequest {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Content-Type", "application/json");
+                headers.put(CONTENT_TYPE, APPLICATION_JSON);
                 return headers;
             }
         };
@@ -213,7 +217,7 @@ public class FilmAPIRequest {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put("Content-Type", "application/json");
+                    headers.put(CONTENT_TYPE, APPLICATION_JSON);
                     headers.put("Token", token);
                     return headers;
                 }
@@ -247,7 +251,7 @@ public class FilmAPIRequest {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Content-Type", "application/json");
+                headers.put(CONTENT_TYPE, APPLICATION_JSON);
                 return headers;
             }
         };
@@ -263,7 +267,7 @@ public class FilmAPIRequest {
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         final String token = sharedPref.getString("saved_token", "");
-        final int userID = sharedPref.getInt("saved_userID", 0);
+        final int userID = sharedPref.getInt(SAVED_USER_ID, 0);
         if(token != null && !token.equals("") && userID != 0) {
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -290,7 +294,7 @@ public class FilmAPIRequest {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put("Content-Type", "application/json");
+                    headers.put(CONTENT_TYPE, APPLICATION_JSON);
                     headers.put("Token", token);
                     return headers;
                 }
@@ -308,7 +312,7 @@ public class FilmAPIRequest {
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         final String token = sharedPref.getString("saved_token", "");
-        final int userID = sharedPref.getInt("saved_userID", 0);
+        final int userID = sharedPref.getInt(SAVED_USER_ID, 0);
         if(token != null && !token.equals("") && userID != 0) {
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -335,7 +339,7 @@ public class FilmAPIRequest {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put("Content-Type", "application/json");
+                    headers.put(CONTENT_TYPE, APPLICATION_JSON);
                     headers.put("Token", token);
                     return headers;
                 }

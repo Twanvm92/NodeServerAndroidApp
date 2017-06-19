@@ -13,7 +13,7 @@ import com.android.volley.toolbox.HurlStack;
 public class VolleyRequestQueue {
     private static VolleyRequestQueue mInstance;
     private RequestQueue mRequestQueue;
-    private static Context mCtx;
+    private Context mCtx;
 
     /**
      * private constructor - kan niet van 'buiten af' worden aangeroepen
@@ -46,7 +46,6 @@ public class VolleyRequestQueue {
 
             Cache cache = new DiskBasedCache(mCtx.getCacheDir(), 10 * 1024 * 1024);
             Network network = new BasicNetwork(new HurlStack());
-            // mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
             mRequestQueue = new RequestQueue(cache, network);
             mRequestQueue.start();
         }

@@ -153,13 +153,11 @@ public class RegisterActivity extends AppCompatActivity implements FilmAPIReques
     }
 
     private boolean isUsernameValid(String username) {
-//        return username.length() >= 5 && username.length() <= 15;
-        return true;
+        return username.length() >= 5 && username.length() <= 15;
     }
 
     private boolean isPasswordValid(String password) {
-//        return password.length() > 6;
-        return true;
+        return password.length() > 6;
     }
 
     /**

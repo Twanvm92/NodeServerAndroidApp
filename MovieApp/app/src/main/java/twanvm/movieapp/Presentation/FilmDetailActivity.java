@@ -33,7 +33,6 @@ public class FilmDetailActivity extends AppCompatActivity implements FilmAPIRequ
     private ArrayList<Film> invenFilms = new ArrayList<>();
     private Film film;
     public final String TAG = this.getClass().getSimpleName();
-    private TextView emptyText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,14 +66,12 @@ public class FilmDetailActivity extends AppCompatActivity implements FilmAPIRequ
 
 
         ListView invenFilmLV = (ListView) findViewById(R.id.activityFilmDetail_lv_inventory);
-        emptyText = (TextView) findViewById(R.id.emptyText);
         invenFilmAdap = new InventoryFilmAdapter(this, invenFilms, this);
         invenFilmLV.setAdapter(invenFilmAdap);
         invenFilmLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(view.getContext(), FilmDetailActivity.class);
-//                RentedFilm rentedFilm = rentedFilms.get(position);
                 startActivity(i);
             }
         });
@@ -89,12 +86,12 @@ public class FilmDetailActivity extends AppCompatActivity implements FilmAPIRequ
 
     @Override
     public void handleLoginNeeded(boolean loginNeeded) {
-
+//            will be handled by loginNeededAdapter
     }
 
     @Override
     public void isFilmReturned(boolean filmReturned) {
-
+//             Not needed in this activity
     }
 
     @Override
@@ -109,21 +106,16 @@ public class FilmDetailActivity extends AppCompatActivity implements FilmAPIRequ
 
         invenFilmAdap.notifyDataSetChanged();
 
-        if (invenFilmAdap == null) {
-            emptyText.setVisibility(View.VISIBLE);
-        } else {
-            emptyText.setVisibility(View.INVISIBLE);
-        }
     }
 
     @Override
     public void onRentedFilmsAvailable(ArrayList<RentedFilm> rentedFilms) {
-
+        // this method is not needed in this Activity
     }
 
     @Override
     public void handleResponseError(VolleyError error) {
-
+            // no error is handled atm
     }
 
     @Override
