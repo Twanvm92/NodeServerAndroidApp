@@ -17,3 +17,8 @@ cache:
   directories:
     - '$HOME/.sonar/cache'
 
+branches:
+  only:
+  - master
+  - develop
+  - SonarqubeAndTravis
