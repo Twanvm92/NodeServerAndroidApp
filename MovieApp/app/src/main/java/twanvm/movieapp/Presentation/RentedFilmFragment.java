@@ -114,10 +114,16 @@ public class RentedFilmFragment extends Fragment implements FilmAPIRequest.FilmA
         Log.i(TAG, "We have " + filmArrayList.size() + " rented films in our list");
 
         rentedFilms.clear();
-        for(int i = 0; i < filmArrayList.size(); i++) {
-            rentedFilms.add(filmArrayList.get(i));
+        if (filmArrayList.size() > 0) {
+            for (int i = 0; i < filmArrayList.size(); i++) {
+                rentedFilms.add(filmArrayList.get(i));
+            }
+            filmAdapter.notifyDataSetChanged();
+        } else {
+            notLoggedIn.setVisibility(VISIBLE);
+            notLoggedIn.setText("You have no active rentals at this moment");
         }
-        filmAdapter.notifyDataSetChanged();
+
     }
 
     @Override
