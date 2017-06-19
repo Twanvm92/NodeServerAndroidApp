@@ -9,6 +9,10 @@ addons:
     organization: "twanvm92-github"
     token:
       secure: "3e0613d813577cce9c841f831bcc112c351558eb"
+    branches :
+    - master
+    - develop
+    - SonarqubeAndTravis
 
 script:
   - sonar-scanner
