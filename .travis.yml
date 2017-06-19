@@ -11,7 +11,7 @@ addons:
       secure: "3e0613d813577cce9c841f831bcc112c351558eb"
 
 script:
-  - ./NodejsServer/sonar-scanner
+  - sonar-scanner
 
 cache:
   directories:
