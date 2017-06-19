@@ -20,7 +20,7 @@ public class Utilities {
             JSONObject obj = new JSONObject(json);
             trimmedString = obj.getString(key);
         } catch(JSONException e){
-            e.printStackTrace();
+            Log.e("Exception: ", e.toString());
             return null;
         }
         return trimmedString;

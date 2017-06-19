@@ -113,7 +113,7 @@ public class FilmAPIRequest {
             // Access the RequestQueue through your singleton class.
             VolleyRequestQueue.getInstance(context).addToRequestQueue(jsObjRequest);
         } catch (JSONException e) {
-             e.printStackTrace();
+             Log.e("Exception: ", e.toString());
         }
         return;
     }
@@ -152,7 +152,7 @@ public class FilmAPIRequest {
             // Access the RequestQueue through your singleton class.
             VolleyRequestQueue.getInstance(context).addToRequestQueue(jsObjRequest);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("Exception: ", e.toString());
         }
         return;
     }
