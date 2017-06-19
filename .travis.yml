@@ -1,24 +1,21 @@
 before_install: cd ./MovieApp
 
-matrix:
-  incude:
-          
-    - language: node_js
-      node_js:
-    - "stable"
-      dist: trusty
-      sudo: required
+language: node_js
+node_js:
+  - "stable"
+dist: trusty
+sudo: required
 
-      addons:
-        sonarqube:
-          organization: "twanvm92-github"
-          token:
-            secure: "3e0613d813577cce9c841f831bcc112c351558eb"
-      jdk:
-        - oraclejdk8
-      script:
-        - sonar-scanner
-      cache:
-        directories:
-          - '$HOME/.sonar/cache'
+addons:
+  sonarqube:
+    organization: "twanvm92-github"
+    token:
+      secure: "3e0613d813577cce9c841f831bcc112c351558eb"
+
+script:
+  - sonar-scanner
+
+cache:
+  directories:
+    - '$HOME/.sonar/cache'
 
