@@ -6,13 +6,14 @@ sudo: required
 
 addons:
   sonarqube:
+    branches :
+      - master
+      - develop
+      - SonarqubeAndTravis
     organization: "twanvm92-github"
     token:
       secure: "3e0613d813577cce9c841f831bcc112c351558eb"
-    branches :
-    - master
-    - develop
-    - SonarqubeAndTravis
+    
 
 script:
   - sonar-scanner
@@ -23,6 +24,6 @@ cache:
 
 branches:
   only:
-  - master
-  - develop
-  - SonarqubeAndTravis
+    - master
+    - develop
+    - SonarqubeAndTravis
