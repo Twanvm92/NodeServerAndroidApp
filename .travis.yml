@@ -1,16 +1,18 @@
-
+language: node_js
+node_js:
+- "stable"
 dist: trusty
 sudo: required
 
 addons:
   sonarqube:
-    organization: "your_organization_key"
+    organization: "twanvm92-github"
     token:
-      secure: "your_token_encrypted_with_travis_encrypt_tool"
-jdk:
-  - oraclejdk8
+      secure: "3e0613d813577cce9c841f831bcc112c351558eb
+
 script:
-  - sonar-scanner
+  - ./NodejsServer/sonar-scanner
+
 cache:
   directories:
     - '$HOME/.sonar/cache'

@@ -22,24 +22,24 @@ import android.widget.TextView;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 
-import twanvm.movieapp.API.MovieAPIRequest;
+import twanvm.movieapp.API.FilmAPIRequest;
 import twanvm.movieapp.R;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity implements MovieAPIRequest.RegisterListener {
+public class RegisterActivity extends AppCompatActivity implements FilmAPIRequest.RegisterListener {
 
     /**
      * Keep track of the register task to ensure we can cancel it if requested.
      */
-    private MovieAPIRequest movieAPIRequest = null;
+    private FilmAPIRequest movieAPIRequest = null;
     public final String TAG = this.getClass().getSimpleName();
 
     // UI references.
     private AutoCompleteTextView mUsernameView;
     private EditText mPasswordView;
-    private TextView mLoginView;
+    private TextView mLoginView, mMainView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -74,6 +74,7 @@ public class RegisterActivity extends AppCompatActivity implements MovieAPIReque
         mProgressView = findViewById(R.id.login_progress);
 
         mLoginView = (TextView) findViewById(R.id.link_to_login);
+        mMainView = (TextView) findViewById(R.id.link_to_main);
 
         mLoginView.setOnClickListener(new OnClickListener() {
             @Override
@@ -82,6 +83,16 @@ public class RegisterActivity extends AppCompatActivity implements MovieAPIReque
                 Intent login = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(login);
                 // Close the current activity
+                finish();
+            }
+        });
+
+        mMainView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the main activity, and close the login activity
+                Intent login = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(login);
                 finish();
             }
         });
@@ -135,10 +146,8 @@ public class RegisterActivity extends AppCompatActivity implements MovieAPIReque
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             showProgress(true);
-            movieAPIRequest = new MovieAPIRequest(this, this);
+            movieAPIRequest = new FilmAPIRequest(this, this);
             movieAPIRequest.HandleRegistration(username, password);
         }
     }
@@ -241,6 +250,13 @@ public class RegisterActivity extends AppCompatActivity implements MovieAPIReque
         } else {
             Log.e(TAG, "handleErrorResponse: error = " + error);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
 

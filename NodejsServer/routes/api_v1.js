@@ -7,7 +7,7 @@ var bcrypt = require('bcrypt');
 var dateTimeHandler = require('../dateTimeHandler');
 
 // A token needs to be provided by the user except for certain requests
-router.all( new RegExp(/^(?!.*\/films|\/about$|\/info$|\/login$|\/register$).*$/m), function (request, response, next) {
+router.all( new RegExp(/^(?!.*\/films\/\d+$|\/films$|\/login$|\/register$).*$/m), function (request, response, next) {
     console.log("Validating token...")
     var token = (request.header('Token')) || '';
 
@@ -142,7 +142,9 @@ router.get('/films/:filmid', function(request, response, next) {
 
     if (filmID > 0) {
         var query_str = {
-            sql: query_str = 'SELECT * FROM view_rental WHERE film_id = "' + filmID + '";',
+            sql: query_str = 'SELECT * FROM `1063`.view_rental WHERE film_id = ' + filmID + ' AND' +
+                ' (rental_id = (SELECT MAX(rental_id) FROM `1063`.view_rental as r' +
+                ' WHERE r.inventory_id = `1063`.view_rental.inventory_id) OR rental_id is NULL);',
             values: [],
             timeout: 5000
         }
@@ -169,7 +171,7 @@ router.get('/films/:filmid', function(request, response, next) {
 router.get('/rentals/:userid', function(request, response) {
     var userID = request.params.userid;
     var query_str = {
-        sql: query_str = 'SELECT * FROM view_rental WHERE customer_id = "' + userID + '";',
+        sql: query_str = 'SELECT * FROM view_rental WHERE customer_id = "' + userID + '" AND return_date IS NULL;',
         values: [],
         timeout: 5000
     }
@@ -210,7 +212,7 @@ router.post('/rentals/:userid/:inventoryid', function(request, response) {
                 return response.status(400).json(error);
 
             }
-            console.log("Rental added to database")
+            console.log("Rental added to database with inventory_id: " + inventoryID);
             response.status(200).json({message: "Rental added to database"});
         });
     });
