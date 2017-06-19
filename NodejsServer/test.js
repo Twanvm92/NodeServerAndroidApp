@@ -250,11 +250,10 @@ describe('Testing user information', function() {
     it('Test fail POST /api/v1/rentals/:userid/:inventoryid', function(done) {
         chai.request(server)
             .post('/api/v1/rentals/1/1234')
-            .set('Token', token)
             .end(function(err, res) {
                 res.should.be.json
-                res.should.have.status(400);
-                res.body.should.have.property('code');
+                res.should.have.status(401);
+                res.body.should.have.property('error').equal('Not authorised');
                 done();
             });
     });
